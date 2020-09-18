@@ -9,8 +9,10 @@ import ru.home.security_admin_bot.controller.to.RecordData;
 import ru.home.security_admin_bot.dao.UserEntity;
 import ru.home.security_admin_bot.dao.repository.UserEntityRepository;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -34,7 +36,7 @@ public class MultipleMessageSender {
                 String text = "Новая заявка  \n----------------------------------------\n Номер квартиры: " + recordData.getFlatNumber() + "\n Номер телефона: " + recordData.getPhoneNumber().replaceAll("\\+", "")
                         + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер автомобиля: " + recordData.getCarNumber();
                 RestTemplate restTemplate = new RestTemplate();
-                final String baseUrl = "https://api.telegram.org/bot" + apiToken + "/sendMessage?chat_id=" + chatId + "&text=" + text;
+                final String baseUrl = "https://api.telegram.org/bot" + apiToken + "/sendMessage?chat_id=" + chatId + "&text=" + URLEncoder.encode(text, "UTF-8");
                 log.warn("baseURL = " + baseUrl);
                 URI uri = new URI(baseUrl);
 
@@ -42,7 +44,7 @@ public class MultipleMessageSender {
                 log.warn("URI = " + uri.toString());
                 Thread.sleep(TimeUnit.SECONDS.toMillis(1));
             }
-        } catch (InterruptedException | URISyntaxException e) {
+        } catch (InterruptedException | URISyntaxException | UnsupportedEncodingException e) {
             e.printStackTrace();
             return false;
         }
