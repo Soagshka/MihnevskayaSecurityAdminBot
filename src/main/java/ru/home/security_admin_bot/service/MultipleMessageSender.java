@@ -43,28 +43,14 @@ public class MultipleMessageSender {
                 RestTemplate restTemplate = new RestTemplate();
 
                 URI uri = URI.create("https://api.telegram.org/bot" + apiToken + "/sendMessage" + "?chat_id=" + chatId + "?text=" + URLEncoder.encode(
-                        "urlParameterString",
+                        text,
                         java.nio.charset.StandardCharsets.UTF_8.toString()
                 ));
                 log.warn("URI = " + uri.toString());
                 MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-                headers.add(HttpHeaders.ACCEPT, "application/json");
+                headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
                 HttpEntity<?> entity = new HttpEntity<Object>(headers);
                 HttpEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
-
-//                restTemplate.getForObject(uri, Object.class);
-//                UriComponentsBuilder telegramRequestBuilder = UriComponentsBuilder.fromHttpUrl("https://api.telegram.org/bot" + apiToken + "/sendMessage")
-//                        .queryParam("chat_id", chatId)
-//                        .queryParam("text", text);
-//                ResponseEntity<String> response
-//                        = restTemplate.getForEntity(telegramRequestBuilder.toUriString(), String.class);
-//                log.warn("urlString = " + urlString);
-//                urlString = String.format(urlString, apiToken, chatId, text);
-//
-//                URL url = new URL(urlString);
-//                log.warn("URL = " + url);
-//                URLConnection conn = url.openConnection();
-//                InputStream is = new BufferedInputStream(conn.getInputStream());
                 Thread.sleep(TimeUnit.SECONDS.toMillis(1));
             }
         } catch (InterruptedException | UnsupportedEncodingException e) {
