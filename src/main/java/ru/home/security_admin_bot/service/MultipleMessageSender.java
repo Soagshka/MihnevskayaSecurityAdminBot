@@ -2,7 +2,12 @@ package ru.home.security_admin_bot.service;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import ru.home.security_admin_bot.controller.to.RecordData;
 import ru.home.security_admin_bot.dao.UserEntity;
@@ -40,7 +45,12 @@ public class MultipleMessageSender {
                 String encode = URLEncoder.encode(text, "UTF-8");
                 URI uri = URI.create("https://api.telegram.org/bot" + apiToken + "/sendMessage" + "?chat_id=" + chatId + "?text=" + encode);
                 log.warn("URI = " + uri.toString());
-                restTemplate.getForObject(uri, Object.class);
+                MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+                headers.add(HttpHeaders.ACCEPT, "application/json");
+                HttpEntity<?> entity = new HttpEntity<Object>(headers);
+                HttpEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
+//                restTemplate.getForObject(uri, Object.class);
 //                UriComponentsBuilder telegramRequestBuilder = UriComponentsBuilder.fromHttpUrl("https://api.telegram.org/bot" + apiToken + "/sendMessage")
 //                        .queryParam("chat_id", chatId)
 //                        .queryParam("text", text);
