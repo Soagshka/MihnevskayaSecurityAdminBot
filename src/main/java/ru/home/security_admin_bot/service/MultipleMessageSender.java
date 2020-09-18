@@ -38,11 +38,10 @@ public class MultipleMessageSender {
                 String text = "Новая заявка  \n----------------------------------------\n Номер квартиры: " + recordData.getFlatNumber() + "\n Номер телефона: " + recordData.getPhoneNumber().replaceAll("\\+", "")
                         + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер телефона: " + recordData.getCarNumber();
 
+                log.warn("urlString = " + urlString);
                 urlString = String.format(urlString, apiToken, chatId, URLEncoder.encode(text, "UTF-8"));
 
-
                 URL url = new URL(urlString);
-                log.warn("urlString = " + urlString);
                 log.warn("URL = " + url);
                 URLConnection conn = url.openConnection();
                 InputStream is = new BufferedInputStream(conn.getInputStream());
