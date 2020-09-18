@@ -36,7 +36,7 @@ public class MultipleMessageSender {
             for (UserEntity userEntity : userEntityList) {
                 String chatId = userEntity.getChatId().toString();
                 String text = "Новая заявка  \n----------------------------------------\n Номер квартиры: " + recordData.getFlatNumber() + "\n Номер телефона: " + recordData.getPhoneNumber().replaceAll("\\+", "")
-                        + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер телефона: ";
+                        + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер автомобиля: " + recordData.getCarNumber();
                 RestTemplate restTemplate = new RestTemplate();
                 final String baseUrl = urlString = String.format(urlString, apiToken, chatId, URLEncoder.encode(text, "UTF-8"));
                 log.warn("baseURL = " + baseUrl);
