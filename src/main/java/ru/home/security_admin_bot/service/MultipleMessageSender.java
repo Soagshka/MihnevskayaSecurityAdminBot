@@ -38,6 +38,7 @@ public class MultipleMessageSender {
                 RestTemplate restTemplate = new RestTemplate();
 
                 URI uri = URI.create("https://api.telegram.org/bot" + apiToken + "/sendMessage" + "?chat_id=" + chatId + "?text=" + URLEncoder.encode(text, "UTF-8"));
+                log.warn("URI = " + uri.toString());
                 restTemplate.getForObject(uri, Object.class);
 //                UriComponentsBuilder telegramRequestBuilder = UriComponentsBuilder.fromHttpUrl("https://api.telegram.org/bot" + apiToken + "/sendMessage")
 //                        .queryParam("chat_id", chatId)
