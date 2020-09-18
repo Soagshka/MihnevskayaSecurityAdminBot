@@ -1,12 +1,12 @@
 package ru.home.security_admin_bot.controller;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.home.security_admin_bot.bot_api.SecurityTelegramAdminBot;
+import ru.home.security_admin_bot.controller.to.RecordData;
+
+import javax.validation.Valid;
 
 @RestController
 public class WebHookController {
@@ -21,8 +21,8 @@ public class WebHookController {
         return securityTelegramAdminBot.onWebhookUpdateReceived(update);
     }
 
-//    @GetMapping(value = "/getsmth", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public int getsmth() {
-//        return 1;
-//    }
+    @PostMapping(path = "send-record", consumes = "application/json", produces = "application/json")
+    public BotApiMethod<?> sendRecord(@RequestBody @Valid RecordData recordData) {
+        return securityTelegramAdminBot.getRecordData(recordData);
+    }
 }

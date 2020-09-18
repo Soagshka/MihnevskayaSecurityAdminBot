@@ -2,12 +2,10 @@ package ru.home.security_admin_bot.bot_api;
 
 public enum BotState {
     SHOW_MAIN_MENU("SHOW_MAIN_MENU"),
-    FILL_RECORD("FILL_RECORD"),
-    ASK_FLAT("ASK_FLAT"),
-    ASK_PHONE_NUMBER("ASK_PHONE_NUMBER"),
-    ASK_CAR_MARK("ASK_CAR_MARK"),
-    ASK_CAR_NUMBER("ASK_CAR_NUMBER"),
-    RECORD_DATA_FILLED("RECORD_DATA_FILLED"),
+    FILL_LOGIN("FILL_LOGIN"),
+    ASK_LOGIN("ASK_LOGIN"),
+    ASK_PASSWORD("ASK_PASSWORD"),
+    LOGIN_SUCCESSFULLY("LOGIN_SUCCESSFULLY"),
     SHOW_HELP("SHOW_HELP");
 
     private final String description;

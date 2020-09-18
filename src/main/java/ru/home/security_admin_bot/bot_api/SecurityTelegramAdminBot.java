@@ -3,6 +3,7 @@ package ru.home.security_admin_bot.bot_api;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.home.security_admin_bot.controller.to.RecordData;
 
 public class SecurityTelegramAdminBot extends TelegramWebhookBot {
     private String botToken;
@@ -32,7 +33,7 @@ public class SecurityTelegramAdminBot extends TelegramWebhookBot {
 
     @Override
     public String getBotPath() {
-        return null;
+        return webHookPath;
     }
 
     public void setBotToken(String botToken) {
@@ -45,5 +46,9 @@ public class SecurityTelegramAdminBot extends TelegramWebhookBot {
 
     public void setWebHookPath(String webHookPath) {
         this.webHookPath = webHookPath;
+    }
+
+    public BotApiMethod<?> getRecordData(RecordData recordData) {
+        return telegramFacade.sendRecordToUsers(recordData);
     }
 }
