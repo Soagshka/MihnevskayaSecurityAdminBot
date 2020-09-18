@@ -3,7 +3,6 @@ package ru.home.security_admin_bot.service;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -11,8 +10,7 @@ import ru.home.security_admin_bot.controller.to.RecordData;
 import ru.home.security_admin_bot.dao.UserEntity;
 import ru.home.security_admin_bot.dao.repository.UserEntityRepository;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -37,14 +35,12 @@ public class MultipleMessageSender {
             for (UserEntity userEntity : userEntityList) {
                 String chatId = userEntity.getChatId().toString();
                 String text = "Новая заявка  \n----------------------------------------\n Номер квартиры: " + recordData.getFlatNumber() + "\n Номер телефона: " + recordData.getPhoneNumber().replaceAll("\\+", "")
-                        + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер телефона: " + recordData.getCarNumber();
-
+                        + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер телефона: ";
+                ByteBuffer byteBuffer = StandardCharsets.UTF_8.encode(text);
                 RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters()
-                        .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
                 UriComponentsBuilder telegramRequestBuilder = UriComponentsBuilder.fromHttpUrl("https://api.telegram.org/bot" + apiToken + "/sendMessage")
                         .queryParam("chat_id", chatId)
-                        .queryParam("text", URLEncoder.encode(text, "UTF-8"));
+                        .queryParam("text", byteBuffer);
                 ResponseEntity<String> response
                         = restTemplate.getForEntity(telegramRequestBuilder.toUriString(), String.class);
 //                log.warn("urlString = " + urlString);
@@ -57,7 +53,7 @@ public class MultipleMessageSender {
                 Thread.sleep(TimeUnit.SECONDS.toMillis(1));
             }
 
-        } catch (InterruptedException | UnsupportedEncodingException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
             return false;
         }
