@@ -34,14 +34,8 @@ public class MultipleMessageSender {
                 String text = "Новая заявка  \n----------------------------------------\n Номер квартиры: " + recordData.getFlatNumber() + "\n Номер телефона: " + recordData.getPhoneNumber().replaceAll("\\+", "")
                         + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер телефона: ";
                 RestTemplate restTemplate = new RestTemplate();
-                StringBuilder builder = new StringBuilder("http://");
-                builder.append("https://api.telegram.org/bot" + apiToken + "/sendMessage");
-                builder.append("?chat_id=");
-                builder.append(chatId);
-                builder.append("?text=");
-                builder.append(text);
 
-                URI uri = URI.create(builder.toString());
+                URI uri = URI.create("http://" + "https://api.telegram.org/bot" + apiToken + "/sendMessage" + "?chat_id=" + chatId + "?text=" + text);
                 restTemplate.getForObject(uri, Object.class);
 //                UriComponentsBuilder telegramRequestBuilder = UriComponentsBuilder.fromHttpUrl("https://api.telegram.org/bot" + apiToken + "/sendMessage")
 //                        .queryParam("chat_id", chatId)
