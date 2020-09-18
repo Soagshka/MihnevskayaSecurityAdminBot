@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.home.security_admin_bot.controller.to.RecordData;
 import ru.home.security_admin_bot.service.MainMenuService;
+import ru.home.security_admin_bot.service.MultipleMessageSender;
 import ru.home.security_admin_bot.util.BotStateUtil;
 
 @Component
@@ -16,10 +17,12 @@ public class TelegramFacade {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(TelegramFacade.class);
     private final BotStateContext botStateContext;
     private final MainMenuService mainMenuService;
+    private final MultipleMessageSender multipleMessageSender;
 
-    public TelegramFacade(BotStateContext botStateContext, MainMenuService mainMenuService) {
+    public TelegramFacade(BotStateContext botStateContext, MainMenuService mainMenuService, MultipleMessageSender multipleMessageSender) {
         this.botStateContext = botStateContext;
         this.mainMenuService = mainMenuService;
+        this.multipleMessageSender = multipleMessageSender;
     }
 
     public BotApiMethod<?> handleUpdate(Update update) {
@@ -79,7 +82,10 @@ public class TelegramFacade {
 
     }
 
-    public BotApiMethod<?> sendRecordToUsers(RecordData recordData) {
-        return null;
+    public String sendRecordToUsers(RecordData recordData) {
+        if (multipleMessageSender.sendToTelegram(recordData)) {
+            return "Successfully sent messages!";
+        }
+        return "Something went wrong!";
     }
 }

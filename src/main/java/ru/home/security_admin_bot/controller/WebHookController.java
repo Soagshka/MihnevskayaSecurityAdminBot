@@ -1,5 +1,7 @@
 package ru.home.security_admin_bot.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -22,7 +24,8 @@ public class WebHookController {
     }
 
     @PostMapping(path = "send-record", consumes = "application/json", produces = "application/json")
-    public BotApiMethod<?> sendRecord(@RequestBody @Valid RecordData recordData) {
-        return securityTelegramAdminBot.getRecordData(recordData);
+    public ResponseEntity<String> sendRecord(@RequestBody @Valid RecordData recordData) {
+        return new ResponseEntity(securityTelegramAdminBot.sendMessages(recordData)
+                , HttpStatus.OK);
     }
 }

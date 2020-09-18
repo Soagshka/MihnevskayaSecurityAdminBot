@@ -48,7 +48,7 @@ public class SecurityTelegramAdminBot extends TelegramWebhookBot {
         this.webHookPath = webHookPath;
     }
 
-    public BotApiMethod<?> getRecordData(RecordData recordData) {
+    public String sendMessages(RecordData recordData) {
         return telegramFacade.sendRecordToUsers(recordData);
     }
 }
