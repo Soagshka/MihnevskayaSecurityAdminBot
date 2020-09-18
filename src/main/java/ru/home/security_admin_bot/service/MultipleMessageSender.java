@@ -3,6 +3,7 @@ package ru.home.security_admin_bot.service;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -12,6 +13,7 @@ import ru.home.security_admin_bot.dao.repository.UserEntityRepository;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -38,6 +40,8 @@ public class MultipleMessageSender {
                         + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер телефона: " + recordData.getCarNumber();
 
                 RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters()
+                        .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
                 UriComponentsBuilder telegramRequestBuilder = UriComponentsBuilder.fromHttpUrl("https://api.telegram.org/bot" + apiToken + "/sendMessage")
                         .queryParam("chat_id", chatId)
                         .queryParam("text", URLEncoder.encode(text, "UTF-8"));
