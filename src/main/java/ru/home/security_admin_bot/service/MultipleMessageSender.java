@@ -1,5 +1,6 @@
 package ru.home.security_admin_bot.service;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.home.security_admin_bot.controller.to.RecordData;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class MultipleMessageSender {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(MultipleMessageSender.class);
     private final UserEntityRepository userEntityRepository;
 
     @Value("${telegrambot.urlString}")
@@ -39,6 +41,8 @@ public class MultipleMessageSender {
 
 
                 URL url = new URL(urlString);
+                log.warn("urlString = " + urlString);
+                log.warn("URL = " + url);
                 URLConnection conn = url.openConnection();
                 InputStream is = new BufferedInputStream(conn.getInputStream());
                 Thread.sleep(TimeUnit.SECONDS.toMillis(1));
