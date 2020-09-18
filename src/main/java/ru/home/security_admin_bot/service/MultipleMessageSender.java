@@ -38,10 +38,8 @@ public class MultipleMessageSender {
                 String text = "Новая заявка  \n----------------------------------------\n Номер квартиры: " + recordData.getFlatNumber() + "\n Номер телефона: " + recordData.getPhoneNumber().replaceAll("\\+", "")
                         + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер телефона: ";
                 RestTemplate restTemplate = new RestTemplate();
-                final String baseUrl = "https://api.telegram.org/bot" + apiToken + "/sendMessage" + "?chat_id=" + chatId + "?text=" + URLEncoder.encode(
-                        "Новая заявка",
-                        java.nio.charset.StandardCharsets.UTF_8.toString()
-                );
+                final String baseUrl = urlString = String.format(urlString, apiToken, chatId, URLEncoder.encode(text, "UTF-8"));
+                log.warn("baseURL = " + baseUrl);
                 URI uri = new URI(baseUrl);
 
                 ResponseEntity<String> result = restTemplate.getForEntity(uri, String.class);
