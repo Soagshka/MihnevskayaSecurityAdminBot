@@ -10,8 +10,8 @@ import ru.home.security_admin_bot.controller.to.RecordData;
 import ru.home.security_admin_bot.dao.UserEntity;
 import ru.home.security_admin_bot.dao.repository.UserEntityRepository;
 
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -36,11 +36,10 @@ public class MultipleMessageSender {
                 String chatId = userEntity.getChatId().toString();
                 String text = "Новая заявка  \n----------------------------------------\n Номер квартиры: " + recordData.getFlatNumber() + "\n Номер телефона: " + recordData.getPhoneNumber().replaceAll("\\+", "")
                         + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер телефона: ";
-                ByteBuffer byteBuffer = StandardCharsets.UTF_8.encode(text);
                 RestTemplate restTemplate = new RestTemplate();
                 UriComponentsBuilder telegramRequestBuilder = UriComponentsBuilder.fromHttpUrl("https://api.telegram.org/bot" + apiToken + "/sendMessage")
                         .queryParam("chat_id", chatId)
-                        .queryParam("text", byteBuffer);
+                        .queryParam("text", URLDecoder.decode(text, "UTF-8"));
                 ResponseEntity<String> response
                         = restTemplate.getForEntity(telegramRequestBuilder.toUriString(), String.class);
 //                log.warn("urlString = " + urlString);
@@ -53,7 +52,7 @@ public class MultipleMessageSender {
                 Thread.sleep(TimeUnit.SECONDS.toMillis(1));
             }
 
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | UnsupportedEncodingException e) {
             e.printStackTrace();
             return false;
         }
