@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +38,7 @@ public class MultipleMessageSender {
                 String text = String.format("%s%n -------------------%nНомер квартиры: %s%nНомер телефона: %s%nМарка автомобиля: %s%nНомер автомобиля: %s%n",
                         "Новая заявка", recordData.getFlatNumber(), recordData.getPhoneNumber(), recordData.getCarMark(), recordData.getCarNumber());
 
-                urlString = String.format(urlString, apiToken, chatId, text);
+                urlString = String.format(urlString, apiToken, chatId, URLEncoder.encode(text, "UTF-8"));
 
 
                 URL url = new URL(urlString);
