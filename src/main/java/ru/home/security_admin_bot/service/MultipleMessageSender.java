@@ -11,7 +11,7 @@ import ru.home.security_admin_bot.dao.UserEntity;
 import ru.home.security_admin_bot.dao.repository.UserEntityRepository;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -37,9 +37,11 @@ public class MultipleMessageSender {
                 String text = "Новая заявка  \n----------------------------------------\n Номер квартиры: " + recordData.getFlatNumber() + "\n Номер телефона: " + recordData.getPhoneNumber().replaceAll("\\+", "")
                         + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер телефона: ";
                 RestTemplate restTemplate = new RestTemplate();
+                String encode = URLEncoder.encode(text, "UTF-8");
+                log.warn("encode = " + encode);
                 UriComponentsBuilder telegramRequestBuilder = UriComponentsBuilder.fromHttpUrl("https://api.telegram.org/bot" + apiToken + "/sendMessage")
                         .queryParam("chat_id", chatId)
-                        .queryParam("text", URLDecoder.decode(text, "UTF-8"));
+                        .queryParam("text", encode);
                 ResponseEntity<String> response
                         = restTemplate.getForEntity(telegramRequestBuilder.toUriString(), String.class);
 //                log.warn("urlString = " + urlString);
