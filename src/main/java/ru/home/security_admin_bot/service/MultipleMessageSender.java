@@ -13,7 +13,9 @@ import ru.home.security_admin_bot.controller.to.RecordData;
 import ru.home.security_admin_bot.dao.UserEntity;
 import ru.home.security_admin_bot.dao.repository.UserEntityRepository;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -40,7 +42,10 @@ public class MultipleMessageSender {
                         + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер телефона: ";
                 RestTemplate restTemplate = new RestTemplate();
 
-                URI uri = URI.create("https://api.telegram.org/bot" + apiToken + "/sendMessage" + "?chat_id=" + chatId + "?text=" + text);
+                URI uri = URI.create("https://api.telegram.org/bot" + apiToken + "/sendMessage" + "?chat_id=" + chatId + "?text=" + URLEncoder.encode(
+                        "urlParameterString",
+                        java.nio.charset.StandardCharsets.UTF_8.toString()
+                ));
                 log.warn("URI = " + uri.toString());
                 MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
                 headers.add(HttpHeaders.ACCEPT, "application/json");
@@ -62,7 +67,7 @@ public class MultipleMessageSender {
 //                InputStream is = new BufferedInputStream(conn.getInputStream());
                 Thread.sleep(TimeUnit.SECONDS.toMillis(1));
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | UnsupportedEncodingException e) {
             e.printStackTrace();
             return false;
         }
