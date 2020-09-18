@@ -9,10 +9,8 @@ import ru.home.security_admin_bot.controller.to.RecordData;
 import ru.home.security_admin_bot.dao.UserEntity;
 import ru.home.security_admin_bot.dao.repository.UserEntityRepository;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -21,8 +19,6 @@ public class MultipleMessageSender {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(MultipleMessageSender.class);
     private final UserEntityRepository userEntityRepository;
 
-    @Value("${telegrambot.urlString}")
-    private String urlString;
     @Value("${telegrambot.botToken}")
     private String apiToken;
 
@@ -38,24 +34,15 @@ public class MultipleMessageSender {
                 String text = "Новая заявка  \n----------------------------------------\n Номер квартиры: " + recordData.getFlatNumber() + "\n Номер телефона: " + recordData.getPhoneNumber().replaceAll("\\+", "")
                         + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер автомобиля: " + recordData.getCarNumber();
                 RestTemplate restTemplate = new RestTemplate();
-                final String baseUrl = urlString = String.format(urlString, apiToken, chatId, URLEncoder.encode(text, "UTF-8"));
+                final String baseUrl = "https://api.telegram.org/bot" + apiToken + "/sendMessage?chat_id=" + chatId + "&text=" + text;
                 log.warn("baseURL = " + baseUrl);
                 URI uri = new URI(baseUrl);
 
                 ResponseEntity<String> result = restTemplate.getForEntity(uri, String.class);
-
-//                URI uri = URI.create("https://api.telegram.org/bot" + apiToken + "/sendMessage" + "?chat_id=" + chatId + "?text=" + URLEncoder.encode(
-//                        "Новая заявка",
-//                        java.nio.charset.StandardCharsets.UTF_8.toString()
-//                ));
                 log.warn("URI = " + uri.toString());
-//                MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-//                headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
-//                HttpEntity<?> entity = new HttpEntity<Object>(headers);
-//                HttpEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
                 Thread.sleep(TimeUnit.SECONDS.toMillis(1));
             }
-        } catch (InterruptedException | UnsupportedEncodingException | URISyntaxException e) {
+        } catch (InterruptedException | URISyntaxException e) {
             e.printStackTrace();
             return false;
         }
