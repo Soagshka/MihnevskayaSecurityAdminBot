@@ -2,16 +2,14 @@ package ru.home.security_admin_bot.service;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import ru.home.security_admin_bot.controller.to.RecordData;
 import ru.home.security_admin_bot.dao.UserEntity;
 import ru.home.security_admin_bot.dao.repository.UserEntityRepository;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -37,17 +35,23 @@ public class MultipleMessageSender {
                 String text = "Новая заявка  \n----------------------------------------\n Номер квартиры: " + recordData.getFlatNumber() + "\n Номер телефона: " + recordData.getPhoneNumber().replaceAll("\\+", "")
                         + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер телефона: " + recordData.getCarNumber();
 
-                log.warn("urlString = " + urlString);
-                urlString = String.format(urlString, apiToken, chatId, text);
-
-                URL url = new URL(urlString);
-                log.warn("URL = " + url);
-                URLConnection conn = url.openConnection();
-                InputStream is = new BufferedInputStream(conn.getInputStream());
+                RestTemplate restTemplate = new RestTemplate();
+                UriComponentsBuilder telegramRequestBuilder = UriComponentsBuilder.fromHttpUrl("https://api.telegram.org/bot" + apiToken + "/sendMessage")
+                        .queryParam("chat_id", chatId)
+                        .queryParam("text", text);
+                ResponseEntity<String> response
+                        = restTemplate.getForEntity(telegramRequestBuilder.toUriString(), String.class);
+//                log.warn("urlString = " + urlString);
+//                urlString = String.format(urlString, apiToken, chatId, text);
+//
+//                URL url = new URL(urlString);
+//                log.warn("URL = " + url);
+//                URLConnection conn = url.openConnection();
+//                InputStream is = new BufferedInputStream(conn.getInputStream());
                 Thread.sleep(TimeUnit.SECONDS.toMillis(1));
             }
 
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
             return false;
         }
