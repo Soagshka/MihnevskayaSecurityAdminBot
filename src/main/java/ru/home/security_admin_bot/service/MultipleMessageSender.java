@@ -35,7 +35,7 @@ public class MultipleMessageSender {
         try {
             for (UserEntity userEntity : userEntityList) {
                 String chatId = userEntity.getChatId().toString();
-                String text = "Новая заявка : \n Номер квартиры: " + recordData.getFlatNumber() + "\n Номер телефона: " + recordData.getPhoneNumber()
+                String text = "Новая заявка  \n----------------------------------------\n Номер квартиры: " + recordData.getFlatNumber() + "\n Номер телефона: " + recordData.getPhoneNumber()
                         + "\n Марка автомобиля: " + recordData.getCarMark() + "\n Номер телефона: " + recordData.getCarNumber();
 
                 urlString = String.format(urlString, apiToken, chatId, URLEncoder.encode(text, "UTF-8"));
