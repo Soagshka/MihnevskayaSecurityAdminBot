@@ -36,7 +36,7 @@ public class ShowLastRecordsHandler implements InputMessageHandler {
             return new SendMessage(chatId, "К сожалению у вас нет доступа к этой информации...");
         }
         SendMessage sendMessage;
-        List<RecordDataEntity> recordDataEntityList = recordDataRepository.findTop10OrderByRecordDateDesc();
+        List<RecordDataEntity> recordDataEntityList = recordDataRepository.findTop5OrderByRecordDateDesc();
         if (recordDataEntityList.isEmpty()) {
             sendMessage = new SendMessage(chatId, "Нет данных о записях...");
         } else {
@@ -59,6 +59,6 @@ public class ShowLastRecordsHandler implements InputMessageHandler {
 
     @Override
     public BotState getHandlerName() {
-        return BotState.SHOW_10_LAST_RECORDS;
+        return BotState.SHOW_5_LAST_RECORDS;
     }
 }

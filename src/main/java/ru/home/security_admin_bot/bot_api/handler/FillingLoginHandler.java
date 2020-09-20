@@ -55,6 +55,10 @@ public class FillingLoginHandler implements InputMessageHandler {
         int userId = message.getFrom().getId();
         long chatId = message.getChatId();
 
+        UserEntity userEntity = userEntityRepository.findByUserIdAndChatId(userId, chatId);
+        if (userEntity != null) {
+            return new SendMessage(chatId, "Вы уже авторизовались в системе");
+        }
         LoginData loginData = userDataCache.getLoginData(userId);
 
         SendMessage sendMessage = null;
