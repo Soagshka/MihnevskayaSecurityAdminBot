@@ -51,7 +51,8 @@ public class SearchByPhoneNumberHandler implements InputMessageHandler {
                         if (phoneNumber.startsWith("7")) {
                             phoneNumber = phoneNumber.replaceFirst("7", "8");
                         }
-                        sendMessage = BotStateUtil.createSendMessage(chatId, recordDataRepository.findTop5ByPhoneNumberOrderByIdDesc(phoneNumber));
+                        sendMessage = BotStateUtil.createSendMessage(chatId,
+                                recordDataRepository.findTop5ByPhoneNumberOrderByIdDesc(phoneNumber), "телефона " + phoneNumber);
                         botState = BotState.SHOW_MAIN_MENU;
                     } else {
                         sendMessage = new SendMessage(chatId, "Неверный номер телефона! Введите телефон заново : ");

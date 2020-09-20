@@ -42,13 +42,13 @@ public class BotStateUtil {
         return BotState.valueOf(botStateEntity.getBotState());
     }
 
-    public static SendMessage createSendMessage(Long chatId, List<RecordDataEntity> recordDataEntityList) {
+    public static SendMessage createSendMessage(Long chatId, List<RecordDataEntity> recordDataEntityList, String filter) {
         if (recordDataEntityList.isEmpty()) {
             return new SendMessage(chatId, "Нет данных о записях...");
         } else {
             int recordsCount = 1;
             StringJoiner joiner = new StringJoiner("\n\n");
-            joiner.add("Последние 5 заявок : ");
+            joiner.add("Последние 5 заявок по номеру " + filter + " : ");
             for (RecordDataEntity recordDataEntity : recordDataEntityList) {
                 joiner.add("Заявка номер " + recordsCount + " \n----------------------------------------\n Номер квартиры: "
                         + recordDataEntity.getFlatNumber() + "\n Номер телефона: "
