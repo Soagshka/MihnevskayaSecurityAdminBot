@@ -55,6 +55,9 @@ public class TelegramFacade {
             case "Заполнить данные для входа":
                 botState = BotState.FILL_LOGIN;
                 break;
+            case "Последние 5 записей":
+                botState = BotState.SHOW_5_LAST_RECORDS;
+                break;
             case "Помощь":
                 botState = BotState.SHOW_HELP;
                 break;
