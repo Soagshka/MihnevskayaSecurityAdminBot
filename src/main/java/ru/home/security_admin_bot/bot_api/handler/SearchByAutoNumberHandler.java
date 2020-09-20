@@ -50,7 +50,7 @@ public class SearchByAutoNumberHandler implements InputMessageHandler {
                 Matcher matcher = pattern.matcher(carNumber);
                 if (matcher.matches()) {
                     List<RecordDataEntity> recordDataEntityList = recordDataRepository.findTop5ByCarNumberOrderByIdDesc(carNumber);
-                    sendMessage = BotStateUtil.createSendMessage(chatId, recordDataEntityList, "автомобиля " + carNumber);
+                    sendMessage = BotStateUtil.createSendMessage(chatId, recordDataEntityList, " по номеру автомобиля " + carNumber);
                     botState = BotState.SHOW_MAIN_MENU;
                 } else {
                     sendMessage = new SendMessage(chatId, "Неверный номер автомобиля! Введите заново : ");

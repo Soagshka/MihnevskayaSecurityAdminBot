@@ -48,7 +48,7 @@ public class BotStateUtil {
         } else {
             int recordsCount = 1;
             StringJoiner joiner = new StringJoiner("\n\n");
-            joiner.add("Последние 5 заявок по номеру " + filter + " : ");
+            joiner.add("Последние 5 заявок" + filter + " : ");
             for (RecordDataEntity recordDataEntity : recordDataEntityList) {
                 joiner.add("Заявка номер " + recordsCount + " \n----------------------------------------\n Номер квартиры: "
                         + recordDataEntity.getFlatNumber() + "\n Номер телефона: "

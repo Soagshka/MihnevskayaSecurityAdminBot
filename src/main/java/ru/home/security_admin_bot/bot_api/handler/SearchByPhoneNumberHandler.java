@@ -52,7 +52,7 @@ public class SearchByPhoneNumberHandler implements InputMessageHandler {
                             phoneNumber = phoneNumber.replaceFirst("7", "8");
                         }
                         sendMessage = BotStateUtil.createSendMessage(chatId,
-                                recordDataRepository.findTop5ByPhoneNumberOrderByIdDesc(phoneNumber), "телефона " + phoneNumber);
+                                recordDataRepository.findTop5ByPhoneNumberOrderByIdDesc(phoneNumber), " по номеру телефона " + phoneNumber);
                         botState = BotState.SHOW_MAIN_MENU;
                     } else {
                         sendMessage = new SendMessage(chatId, "Неверный номер телефона! Введите телефон заново : ");

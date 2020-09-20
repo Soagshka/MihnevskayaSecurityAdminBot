@@ -24,7 +24,7 @@ public class ShowLastRecordsHandler implements InputMessageHandler {
     public SendMessage handle(int userId, long chatId, String text) {
         SendMessage sendMessage;
         List<RecordDataEntity> recordDataEntityList = recordDataRepository.findTop5ByOrderByIdAsc();
-        sendMessage = BotStateUtil.createSendMessage(chatId, recordDataEntityList);
+        sendMessage = BotStateUtil.createSendMessage(chatId, recordDataEntityList, "");
 
         BotStateUtil.saveBotState(userId, chatId, BotState.SHOW_MAIN_MENU);
         return sendMessage;
