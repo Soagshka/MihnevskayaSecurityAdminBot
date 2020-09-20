@@ -7,7 +7,9 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.home.security_admin_bot.bot_api.BotState;
 import ru.home.security_admin_bot.bot_api.InputMessageHandler;
 import ru.home.security_admin_bot.dao.RecordDataEntity;
+import ru.home.security_admin_bot.dao.UserEntity;
 import ru.home.security_admin_bot.dao.repository.RecordDataRepository;
+import ru.home.security_admin_bot.dao.repository.UserEntityRepository;
 import ru.home.security_admin_bot.util.BotStateUtil;
 
 import java.util.List;
@@ -17,9 +19,11 @@ import java.util.StringJoiner;
 public class ShowLastRecordsHandler implements InputMessageHandler {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(ShowLastRecordsHandler.class);
     private final RecordDataRepository recordDataRepository;
+    private final UserEntityRepository userEntityRepository;
 
-    public ShowLastRecordsHandler(RecordDataRepository recordDataRepository) {
+    public ShowLastRecordsHandler(RecordDataRepository recordDataRepository, UserEntityRepository userEntityRepository) {
         this.recordDataRepository = recordDataRepository;
+        this.userEntityRepository = userEntityRepository;
     }
 
     @Override
@@ -27,6 +31,10 @@ public class ShowLastRecordsHandler implements InputMessageHandler {
         int userId = message.getFrom().getId();
         long chatId = message.getChatId();
 
+        UserEntity userEntity = userEntityRepository.findByUserIdAndChatId(userId, chatId);
+        if (userEntity == null) {
+            return new SendMessage(chatId, "К сожалению у вас нет доступа к этой информации...");
+        }
         SendMessage sendMessage;
         List<RecordDataEntity> recordDataEntityList = recordDataRepository.findTop10OrderByRecordDateDesc();
         if (recordDataEntityList.isEmpty()) {

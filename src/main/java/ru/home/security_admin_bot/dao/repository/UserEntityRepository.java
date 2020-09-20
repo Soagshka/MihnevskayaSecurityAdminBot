@@ -6,4 +6,5 @@ import ru.home.security_admin_bot.dao.UserEntity;
 
 @Repository
 public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
+    UserEntity findByUserIdAndChatId(int userId, long chatId);
 }
