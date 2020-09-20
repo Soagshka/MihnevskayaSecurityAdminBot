@@ -6,6 +6,7 @@ public enum BotState {
     ASK_LOGIN("ASK_LOGIN"),
     ASK_PASSWORD("ASK_PASSWORD"),
     LOGIN_SUCCESSFULLY("LOGIN_SUCCESSFULLY"),
+    SHOW_10_LAST_RECORDS("SHOW_10_LAST_RECORDS"),
     SHOW_HELP("SHOW_HELP");
 
     private final String description;

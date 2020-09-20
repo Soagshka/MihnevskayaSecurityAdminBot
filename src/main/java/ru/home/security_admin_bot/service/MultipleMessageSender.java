@@ -2,12 +2,13 @@ package ru.home.security_admin_bot.service;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.home.security_admin_bot.controller.to.RecordData;
 import ru.home.security_admin_bot.dao.UserEntity;
+import ru.home.security_admin_bot.dao.repository.RecordDataRepository;
 import ru.home.security_admin_bot.dao.repository.UserEntityRepository;
+import ru.home.security_admin_bot.mapper.RecordDataMapper;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -20,12 +21,14 @@ import java.util.concurrent.TimeUnit;
 public class MultipleMessageSender {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(MultipleMessageSender.class);
     private final UserEntityRepository userEntityRepository;
+    private final RecordDataRepository recordDataRepository;
 
     @Value("${telegrambot.botToken}")
     private String apiToken;
 
-    public MultipleMessageSender(UserEntityRepository userEntityRepository) {
+    public MultipleMessageSender(UserEntityRepository userEntityRepository, RecordDataRepository recordDataRepository) {
         this.userEntityRepository = userEntityRepository;
+        this.recordDataRepository = recordDataRepository;
     }
 
     public boolean sendToTelegram(RecordData recordData) {
@@ -40,10 +43,11 @@ public class MultipleMessageSender {
                 log.warn("baseURL = " + baseUrl);
                 URI uri = new URI(baseUrl);
 
-                ResponseEntity<String> result = restTemplate.getForEntity(uri, String.class);
+                restTemplate.getForEntity(uri, String.class);
                 log.warn("URI = " + uri.toString());
                 Thread.sleep(TimeUnit.SECONDS.toMillis(1));
             }
+            recordDataRepository.save(RecordDataMapper.RECORD_DATA_MAPPER.recordDataToRecordEntity(recordData));
         } catch (InterruptedException | URISyntaxException | UnsupportedEncodingException e) {
             e.printStackTrace();
             return false;
