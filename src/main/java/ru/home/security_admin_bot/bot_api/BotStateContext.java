@@ -2,7 +2,6 @@ package ru.home.security_admin_bot.bot_api;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,15 +18,19 @@ public class BotStateContext {
         });
     }
 
-    public SendMessage processInputMessage(BotState botState, Message message) {
+    public SendMessage processInputMessage(BotState botState, int userId, long chatId, String text) {
         InputMessageHandler inputMessageHandler = findMessageHandler(botState);
-        return inputMessageHandler.handle(message);
+        return inputMessageHandler.handle(userId, chatId, text);
     }
 
     private InputMessageHandler findMessageHandler(BotState botState) {
         if (isFillingProfileState(botState)) {
             System.out.println("MESSAGE HANDLERS : " + messageHandlers.toString());
             return messageHandlers.get(BotState.FILL_LOGIN);
+        } else if (isSearchingByAutoNumber(botState)) {
+            return messageHandlers.get(BotState.SEARCH_BY_AUTO_NUMBER);
+        } else if (isSearchingByPhoneNumber(botState)) {
+            return messageHandlers.get(BotState.SEARCH_BY_PHONE_NUMBER);
         }
         return messageHandlers.get(botState);
     }
@@ -38,6 +41,26 @@ public class BotStateContext {
             case ASK_LOGIN:
             case ASK_PASSWORD:
             case LOGIN_SUCCESSFULLY:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private boolean isSearchingByAutoNumber(BotState botState) {
+        switch (botState) {
+            case SEARCH_BY_AUTO_NUMBER:
+            case ASK_AUTO_NUMBER:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private boolean isSearchingByPhoneNumber(BotState botState) {
+        switch (botState) {
+            case SEARCH_BY_PHONE_NUMBER:
+            case ASK_PHONE_NUMBER:
                 return true;
             default:
                 return false;

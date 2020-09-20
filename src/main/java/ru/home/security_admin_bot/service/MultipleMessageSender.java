@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.home.security_admin_bot.controller.to.RecordData;
+import ru.home.security_admin_bot.dao.RecordDataEntity;
 import ru.home.security_admin_bot.dao.UserEntity;
 import ru.home.security_admin_bot.dao.repository.RecordDataRepository;
 import ru.home.security_admin_bot.dao.repository.UserEntityRepository;
@@ -14,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -47,7 +49,9 @@ public class MultipleMessageSender {
                 log.warn("URI = " + uri.toString());
                 Thread.sleep(TimeUnit.SECONDS.toMillis(1));
             }
-            recordDataRepository.save(RecordDataMapper.RECORD_DATA_MAPPER.recordDataToRecordEntity(recordData));
+            RecordDataEntity recordDataEntity = RecordDataMapper.RECORD_DATA_MAPPER.recordDataToRecordEntity(recordData);
+            recordDataEntity.setRecordDate(new Timestamp(System.currentTimeMillis()));
+            recordDataRepository.save(recordDataEntity);
         } catch (InterruptedException | URISyntaxException | UnsupportedEncodingException e) {
             e.printStackTrace();
             return false;

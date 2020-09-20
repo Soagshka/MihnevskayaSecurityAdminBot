@@ -8,5 +8,9 @@ import java.util.List;
 
 @Repository
 public interface RecordDataRepository extends JpaRepository<RecordDataEntity, Long> {
-    List<RecordDataEntity> findTop5ByOrderByRecordDateDesc();
+    List<RecordDataEntity> findTop5ByOrderByIdDesc();
+
+    List<RecordDataEntity> findTop5ByPhoneNumberOrderByIdDesc(String phoneNumber);
+
+    List<RecordDataEntity> findTop5ByCarNumberOrderByIdDesc(String carNumber);
 }

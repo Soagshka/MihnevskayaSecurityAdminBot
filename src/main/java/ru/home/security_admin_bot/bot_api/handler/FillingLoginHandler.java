@@ -3,13 +3,10 @@ package ru.home.security_admin_bot.bot_api.handler;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.home.security_admin_bot.bot_api.BotState;
 import ru.home.security_admin_bot.bot_api.InputMessageHandler;
 import ru.home.security_admin_bot.cache.UserDataCache;
-import ru.home.security_admin_bot.dao.BotStateEntity;
 import ru.home.security_admin_bot.dao.UserEntity;
-import ru.home.security_admin_bot.dao.repository.BotStateRepository;
 import ru.home.security_admin_bot.dao.repository.UserEntityRepository;
 import ru.home.security_admin_bot.model.LoginData;
 import ru.home.security_admin_bot.service.ReplyMessageService;
@@ -21,28 +18,18 @@ public class FillingLoginHandler implements InputMessageHandler {
     private static final String LOGIN = "ОхранаМихневская8";
     private static final String PASSWORD = "АдминМихневская8";
     private final ReplyMessageService replyMessageService;
-    private final BotStateRepository botStateRepository;
     private final UserEntityRepository userEntityRepository;
     private final UserDataCache userDataCache;
 
-    public FillingLoginHandler(ReplyMessageService replyMessageService, BotStateRepository botStateRepository, UserEntityRepository userEntityRepository, UserDataCache userDataCache) {
+    public FillingLoginHandler(ReplyMessageService replyMessageService, UserEntityRepository userEntityRepository, UserDataCache userDataCache) {
         this.replyMessageService = replyMessageService;
-        this.botStateRepository = botStateRepository;
         this.userEntityRepository = userEntityRepository;
         this.userDataCache = userDataCache;
     }
 
     @Override
-    public SendMessage handle(Message message) {
-        BotState botState = BotState.ASK_LOGIN;
-        BotStateEntity botStateEntity = botStateRepository.findByUserIdAndChatId(message.getFrom().getId(), message.getChatId());
-        if (botStateEntity != null) {
-            if (!botStateEntity.getBotState().equals("FILL_LOGIN")) {
-                botState = BotState.valueOf(botStateEntity.getBotState());
-            }
-        }
-
-        return processUsersInput(message, botState);
+    public SendMessage handle(int userId, long chatId, String text) {
+        return processUsersInput(userId, chatId, text, BotStateUtil.getBotState(userId, chatId));
     }
 
     @Override
@@ -50,11 +37,7 @@ public class FillingLoginHandler implements InputMessageHandler {
         return BotState.FILL_LOGIN;
     }
 
-    private SendMessage processUsersInput(Message message, BotState botState) {
-        String userAnswer = message.getText();
-        int userId = message.getFrom().getId();
-        long chatId = message.getChatId();
-
+    private SendMessage processUsersInput(int userId, long chatId, String userAnswer, BotState botState) {
         UserEntity userEntity = userEntityRepository.findByUserIdAndChatId(userId, chatId);
         if (userEntity != null) {
             return new SendMessage(chatId, "Вы уже авторизовались в системе");

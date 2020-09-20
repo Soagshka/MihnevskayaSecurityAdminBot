@@ -17,8 +17,6 @@ public class RecordDataEntity {
     @Column(name = "id")
     @GeneratedValue
     private Long id;
-    private int userId;
-    private Long chatId;
     private int flatNumber;
     private String phoneNumber;
     private String carMark;

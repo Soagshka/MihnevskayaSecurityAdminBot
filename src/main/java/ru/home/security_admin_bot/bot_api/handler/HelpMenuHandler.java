@@ -2,7 +2,6 @@ package ru.home.security_admin_bot.bot_api.handler;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.home.security_admin_bot.bot_api.BotState;
 import ru.home.security_admin_bot.bot_api.InputMessageHandler;
 import ru.home.security_admin_bot.service.MainMenuService;
@@ -19,8 +18,8 @@ public class HelpMenuHandler implements InputMessageHandler {
     }
 
     @Override
-    public SendMessage handle(Message message) {
-        return mainMenuService.getMainMenuMessage(message.getChatId(),
+    public SendMessage handle(int userId, long chatId, String text) {
+        return mainMenuService.getMainMenuMessage(chatId,
                 messagesService.getReplyText("reply.showHelpMenu"));
     }
 

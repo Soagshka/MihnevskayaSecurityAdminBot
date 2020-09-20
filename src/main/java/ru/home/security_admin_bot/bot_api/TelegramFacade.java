@@ -8,6 +8,8 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.home.security_admin_bot.controller.to.RecordData;
+import ru.home.security_admin_bot.dao.UserEntity;
+import ru.home.security_admin_bot.dao.repository.UserEntityRepository;
 import ru.home.security_admin_bot.service.MainMenuService;
 import ru.home.security_admin_bot.service.MultipleMessageSender;
 import ru.home.security_admin_bot.util.BotStateUtil;
@@ -18,11 +20,13 @@ public class TelegramFacade {
     private final BotStateContext botStateContext;
     private final MainMenuService mainMenuService;
     private final MultipleMessageSender multipleMessageSender;
+    private final UserEntityRepository userEntityRepository;
 
-    public TelegramFacade(BotStateContext botStateContext, MainMenuService mainMenuService, MultipleMessageSender multipleMessageSender) {
+    public TelegramFacade(BotStateContext botStateContext, MainMenuService mainMenuService, MultipleMessageSender multipleMessageSender, UserEntityRepository userEntityRepository) {
         this.botStateContext = botStateContext;
         this.mainMenuService = mainMenuService;
         this.multipleMessageSender = multipleMessageSender;
+        this.userEntityRepository = userEntityRepository;
     }
 
     public BotApiMethod<?> handleUpdate(Update update) {
@@ -44,6 +48,7 @@ public class TelegramFacade {
     private SendMessage handleInputMessage(Message message) {
         String inputMsg = message.getText();
         int userId = message.getFrom().getId();
+        Long chatId = message.getChatId();
         BotState botState;
 
         SendMessage replyMessage;
@@ -58,19 +63,29 @@ public class TelegramFacade {
             case "Последние 5 записей":
                 botState = BotState.SHOW_5_LAST_RECORDS;
                 break;
+            case "Поиск заявки по номеру автомобиля":
+                botState = BotState.SEARCH_BY_AUTO_NUMBER;
+                break;
+            case "Поиск заявки по номеру телефона":
+                botState = BotState.SEARCH_BY_PHONE_NUMBER;
+                break;
             case "Помощь":
                 botState = BotState.SHOW_HELP;
                 break;
             default:
-                botState = BotStateUtil.getBotState(message.getFrom().getId(), message.getChatId());
+                botState = BotStateUtil.getBotState(userId, chatId);
                 break;
         }
 
         log.warn("SAVING BOT STATE = " + botState.getDescription());
-        BotStateUtil.saveBotState(userId, message.getChatId(), botState);
+        BotStateUtil.saveBotState(userId, chatId, botState);
         //userDataCache.setUsersCurrentBotState(userId, botState);
+        UserEntity userEntity = userEntityRepository.findByUserIdAndChatId(userId, chatId);
+        if (userEntity == null && !botState.getDescription().equals("SHOW_MAIN_MENU")) {
+            return new SendMessage(chatId, "К сожалению у вас нет доступа к этой информации...");
+        }
 
-        replyMessage = botStateContext.processInputMessage(botState, message);
+        replyMessage = botStateContext.processInputMessage(botState, userId, chatId, inputMsg);
         return replyMessage;
     }
 
