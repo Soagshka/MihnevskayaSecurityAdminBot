@@ -68,9 +68,9 @@ public class BotStateUtil {
             case ASK_LOGIN:
             case ASK_PASSWORD:
             case LOGIN_SUCCESSFULLY:
-                return true;
-            default:
                 return false;
+            default:
+                return true;
         }
     }
 }
