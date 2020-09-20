@@ -7,6 +7,7 @@ import ru.home.security_admin_bot.dao.BotStateEntity;
 import ru.home.security_admin_bot.dao.RecordDataEntity;
 import ru.home.security_admin_bot.dao.repository.BotStateRepository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -44,17 +45,18 @@ public class BotStateUtil {
 
     public static SendMessage createSendMessage(Long chatId, List<RecordDataEntity> recordDataEntityList, String filter) {
         if (recordDataEntityList.isEmpty()) {
-            return new SendMessage(chatId, "Нет данных о записях...");
+            return new SendMessage(chatId, "Нет данных о записях" + filter);
         } else {
             int recordsCount = 1;
             StringJoiner joiner = new StringJoiner("\n\n");
             joiner.add("Последние 5 заявок" + filter + " : ");
             for (RecordDataEntity recordDataEntity : recordDataEntityList) {
-                joiner.add("Заявка номер " + recordsCount + " \n----------------------------------------\n Номер квартиры: "
-                        + recordDataEntity.getFlatNumber() + "\n Номер телефона: "
-                        + recordDataEntity.getPhoneNumber().replaceAll("\\+", "")
-                        + "\n Марка автомобиля: " + recordDataEntity.getCarMark() + "\n Номер автомобиля: "
-                        + recordDataEntity.getCarNumber());
+                joiner.add("Заявка номер " + recordsCount
+                        + " \n----------------------------------------\n Номер квартиры: " + recordDataEntity.getFlatNumber()
+                        + "\n Номер телефона: " + recordDataEntity.getPhoneNumber().replaceAll("\\+", "")
+                        + "\n Марка автомобиля: " + recordDataEntity.getCarMark()
+                        + "\n Номер автомобиля: " + recordDataEntity.getCarNumber()
+                        + "\n Время заявки: " + new Timestamp(recordDataEntity.getRecordDate().getTime() + (1000 * 60 * 60 * 3)));
                 recordsCount++;
             }
             return new SendMessage(chatId, joiner.toString());
