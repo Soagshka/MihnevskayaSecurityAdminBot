@@ -51,6 +51,7 @@ public class BotStateContext {
         switch (botState) {
             case SEARCH_BY_AUTO_NUMBER:
             case ASK_AUTO_NUMBER:
+            case SEARCH_BY_AUTO_NUMBER_COMPLETED:
                 return true;
             default:
                 return false;
@@ -61,6 +62,7 @@ public class BotStateContext {
         switch (botState) {
             case SEARCH_BY_PHONE_NUMBER:
             case ASK_PHONE_NUMBER:
+            case SEARCH_BY_PHONE_NUMBER_COMPLETED:
                 return true;
             default:
                 return false;
