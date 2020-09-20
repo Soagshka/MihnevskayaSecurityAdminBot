@@ -60,7 +60,7 @@ public class TelegramFacade {
             case "Заполнить данные для входа":
                 botState = BotState.FILL_LOGIN;
                 break;
-            case "Последние 5 записей":
+            case "Последние 5 заявок":
                 botState = BotState.SHOW_5_LAST_RECORDS;
                 break;
             case "Поиск заявки по номеру автомобиля":

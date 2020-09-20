@@ -31,7 +31,7 @@ public class MainMenuService {
         KeyboardRow row3 = new KeyboardRow();
         KeyboardRow row4 = new KeyboardRow();
         row1.add(new KeyboardButton("Заполнить данные для входа"));
-        row2.add(new KeyboardButton("Последние 5 записей"));
+        row2.add(new KeyboardButton("Последние 5 заявок"));
         row3.add(new KeyboardButton("Помощь"));
         row4.add(new KeyboardButton("Поиск заявки по номеру автомобиля"));
         row4.add(new KeyboardButton("Поиск заявки по номеру телефона"));
