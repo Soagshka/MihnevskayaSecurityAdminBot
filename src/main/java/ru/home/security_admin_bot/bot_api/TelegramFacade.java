@@ -81,7 +81,7 @@ public class TelegramFacade {
         BotStateUtil.saveBotState(userId, chatId, botState);
         //userDataCache.setUsersCurrentBotState(userId, botState);
         UserEntity userEntity = userEntityRepository.findByUserIdAndChatId(userId, chatId);
-        if (userEntity == null && !(botState.getDescription().equals("SHOW_MAIN_MENU") || botState.getDescription().equals("FILL_LOGIN"))) {
+        if (userEntity == null && BotStateUtil.isAllowedToUse(botState)) {
             return new SendMessage(chatId, "К сожалению у вас нет доступа к этой информации....");
         }
 

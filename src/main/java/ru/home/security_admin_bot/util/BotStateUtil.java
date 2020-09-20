@@ -60,4 +60,17 @@ public class BotStateUtil {
             return new SendMessage(chatId, joiner.toString());
         }
     }
+
+    public static boolean isAllowedToUse(BotState botState) {
+        switch (botState) {
+            case SHOW_MAIN_MENU:
+            case FILL_LOGIN:
+            case ASK_LOGIN:
+            case ASK_PASSWORD:
+            case LOGIN_SUCCESSFULLY:
+                return true;
+            default:
+                return false;
+        }
+    }
 }
